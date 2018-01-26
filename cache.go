@@ -185,9 +185,11 @@ func (c *cache) createField(field reflect.StructField, info *structInfo) {
 	}
 
 	info.fields = append(info.fields, &fieldInfo{
-		typ:      field.Type,
-		name:     field.Name,
-		ss:       isSlice && isStruct,
+		typ:  field.Type,
+		name: field.Name,
+		// 下面这行导致 []string 无法识别为 isSlice
+		// ss:       isSlice && isStruct,
+		ss:       isSlice,
 		alias:    alias,
 		anon:     field.Anonymous,
 		required: options.Contains("required"),
