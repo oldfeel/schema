@@ -76,6 +76,11 @@ func (d *Decoder) Decode(dst interface{}, src map[string][]string) error {
 	t := v.Type()
 	errors := MultiError{}
 	for path, values := range src {
+		// 添加兼容 map 模式(例如:F分类[Id])
+		if strings.Contains(path, "[") {
+			path = strings.Replace(path, "[", ".", -1)
+			path = strings.Replace(path, "]", "", -1)
+		}
 		if parts, err := d.cache.parsePath(path, t); err == nil {
 			if err = d.decode(v, path, parts, values); err != nil {
 				errors[path] = err
